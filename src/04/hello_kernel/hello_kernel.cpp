@@ -5,7 +5,7 @@
 #include <string.h>
 #include <CL/cl.h>
 
-// 我的电脑只有AMD能够工作
+// 鎴戠殑鐢佃剳鍙湁AMD鑳藉宸ヤ綔
 cl_platform_id getAMDPlatform() {
 	cl_uint n;
 	clGetPlatformIDs(0, NULL, &n);

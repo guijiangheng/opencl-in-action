@@ -26,7 +26,7 @@ int main() {
 	printf("Main buffer size: %lu\n", main_buffer_size);
 	printf("Sub buffer size: %lu\n", sub_buffer_size);
 
-	// 只有当flags包含CL_MEM_USE_HOST_PTR时，才能读到host ptr
+	//鍙湁鍦ㄥ垱寤築uffer鏃朵娇鐢║SE_HOST_PTR锛屾墠鑳藉緱鍒癏OST_PTR
 	void* main_buffer_mem, *sub_buffer_mem;
 	clGetMemObjectInfo(main_buffer, CL_MEM_HOST_PTR, sizeof(main_buffer_mem), &main_buffer_mem, NULL);
 	clGetMemObjectInfo(sub_buffer, CL_MEM_HOST_PTR, sizeof(sub_buffer_mem), &sub_buffer_mem, NULL);
