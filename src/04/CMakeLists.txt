@@ -1,1 +1,2 @@
 add_subdirectory(hello_kernel)
+add_subdirectory(double_test)
