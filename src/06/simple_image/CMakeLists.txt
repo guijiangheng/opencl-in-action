@@ -1,6 +1,4 @@
 add_executable(simple_image simple_image.cpp)
-target_link_libraries(simple_image opencl libpng zlib)
-
 set_target_properties(simple_image PROPERTIES FOLDER "06")
 add_custom_command(
     TARGET simple_image POST_BUILD

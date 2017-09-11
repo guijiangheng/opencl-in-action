@@ -5,6 +5,7 @@
 #include <string.h>
 #include <CL/cl.h>
 
+// 我的电脑只有AMD支持双精度浮点数
 cl_platform_id getAMDPlatform() {
 	cl_uint n;
 	clGetPlatformIDs(0, NULL, &n);

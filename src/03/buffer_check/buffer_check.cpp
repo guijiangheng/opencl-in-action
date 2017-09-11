@@ -21,15 +21,19 @@ int main() {
 			CL_BUFFER_CREATE_TYPE_REGION, &region, NULL);
 
 	size_t main_buffer_size, sub_buffer_size;
-	clGetMemObjectInfo(main_buffer, CL_MEM_SIZE, sizeof(main_buffer_size), &main_buffer_size, NULL);
-	clGetMemObjectInfo(sub_buffer, CL_MEM_SIZE, sizeof(sub_buffer_size), &sub_buffer_size, NULL);
+	clGetMemObjectInfo(main_buffer, CL_MEM_SIZE,
+		sizeof(main_buffer_size), &main_buffer_size, NULL);
+	clGetMemObjectInfo(sub_buffer, CL_MEM_SIZE,
+		sizeof(sub_buffer_size), &sub_buffer_size, NULL);
 	printf("Main buffer size: %lu\n", main_buffer_size);
 	printf("Sub buffer size: %lu\n", sub_buffer_size);
 
 	//只有在创建Buffer时使用USE_HOST_PTR，才能得到HOST_PTR
 	void* main_buffer_mem, *sub_buffer_mem;
-	clGetMemObjectInfo(main_buffer, CL_MEM_HOST_PTR, sizeof(main_buffer_mem), &main_buffer_mem, NULL);
-	clGetMemObjectInfo(sub_buffer, CL_MEM_HOST_PTR, sizeof(sub_buffer_mem), &sub_buffer_mem, NULL);
+	clGetMemObjectInfo(main_buffer, CL_MEM_HOST_PTR,
+		sizeof(main_buffer_mem), &main_buffer_mem, NULL);
+	clGetMemObjectInfo(sub_buffer, CL_MEM_HOST_PTR,
+		sizeof(sub_buffer_mem), &sub_buffer_mem, NULL);
 	printf("Main buffer memory address: %p\n", main_buffer_mem);
 	printf("Sub buffer memory address: %p\n", sub_buffer_mem);
 

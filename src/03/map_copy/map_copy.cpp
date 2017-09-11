@@ -21,19 +21,19 @@ int main() {
 	}
 
 	cl_mem buffer_one = clCreateBuffer(
-			context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-			sizeof(data_one), data_one, NULL);
+		context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
+		sizeof(data_one), data_one, NULL);
 	cl_mem buffer_two = clCreateBuffer(
-			context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-			sizeof(data_two), data_two, NULL);
+		context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
+		sizeof(data_two), data_two, NULL);
 
 	clEnqueueCopyBuffer(
-			queue, buffer_one, buffer_two,
-			0, 0, sizeof(data_one), 0, NULL, NULL);
+		queue, buffer_one, buffer_two,
+		0, 0, sizeof(data_one), 0, NULL, NULL);
 
 	void* mapped_memory = clEnqueueMapBuffer(
-			queue, buffer_two, CL_TRUE, CL_MAP_READ,
-			0, sizeof(data_two), 0, NULL, NULL, NULL);
+		queue, buffer_two, CL_TRUE, CL_MAP_READ,
+		0, sizeof(data_two), 0, NULL, NULL, NULL);
 
 	memcpy(result, mapped_memory, sizeof(data_two));
 	clEnqueueUnmapMemObject(queue, buffer_two, mapped_memory, 0, NULL, NULL);

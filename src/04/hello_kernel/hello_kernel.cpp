@@ -5,7 +5,6 @@
 #include <string.h>
 #include <CL/cl.h>
 
-// 我的电脑只有AMD能够工作
 cl_platform_id getAMDPlatform() {
 	cl_uint n;
 	clGetPlatformIDs(0, NULL, &n);
@@ -21,7 +20,6 @@ cl_platform_id getAMDPlatform() {
 			break;
 		}
 	}
-
 	free(platforms);
 
 	return platform;
@@ -44,7 +42,7 @@ int main() {
 	fclose(source_file);
 
 	cl_program program = clCreateProgramWithSource(
-			context, 1, (const char**)&source, &length, NULL);
+		context, 1, (const char**)&source, &length, NULL);
 	clBuildProgram(program, 1, &device, NULL, NULL, NULL);
 	cl_kernel kernel = clCreateKernel(program, "hello_kernel", NULL);
 
@@ -52,11 +50,11 @@ int main() {
 
 	char msg[16];
 	cl_mem msg_buffer = clCreateBuffer(
-			context, CL_MEM_WRITE_ONLY, sizeof(msg), NULL, NULL);
+		context, CL_MEM_WRITE_ONLY, sizeof(msg), NULL, NULL);
 	clSetKernelArg(kernel, 0, sizeof(msg_buffer), &msg_buffer);
 	clEnqueueTask(queue, kernel, 0, NULL, NULL);
 	clEnqueueReadBuffer(queue, msg_buffer, CL_TRUE,
-						0, sizeof(msg), msg, 0, NULL, NULL);
+		0, sizeof(msg), msg, 0, NULL, NULL);
 
 	printf("Kernel output: %s \n", msg, strlen(msg));
 

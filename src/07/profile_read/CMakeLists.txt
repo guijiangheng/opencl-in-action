@@ -1,6 +1,4 @@
 add_executable(profile_read profile_read.cpp)
-target_link_libraries(profile_read opencl)
-
 set_target_properties(profile_read PROPERTIES FOLDER "07")
 add_custom_command(
     TARGET profile_read POST_BUILD

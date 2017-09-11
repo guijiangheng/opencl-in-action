@@ -1,6 +1,4 @@
 add_executable(callback callback.cpp)
-target_link_libraries(callback opencl)
-
 set_target_properties(callback PROPERTIES FOLDER "07")
 add_custom_command(
     TARGET callback POST_BUILD

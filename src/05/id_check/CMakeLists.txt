@@ -1,6 +1,4 @@
 add_executable(id_check id_check.cpp)
-target_link_libraries(id_check opencl)
-
 set_target_properties(id_check PROPERTIES FOLDER "05")
 add_custom_command(
     TARGET id_check POST_BUILD

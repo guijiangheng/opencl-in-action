@@ -1,3 +1,0 @@
-add_subdirectory(hello_kernel)
-add_subdirectory(double_test)
-add_subdirectory(float_config)

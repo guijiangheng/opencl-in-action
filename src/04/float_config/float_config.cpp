@@ -5,35 +5,24 @@
 #include <string.h>
 #include <CL/cl.h>
 
-cl_platform_id getAMDPlatform() {
+cl_platform_id getPlatform() {
 	cl_uint n;
 	clGetPlatformIDs(0, NULL, &n);
 	auto platforms = (cl_platform_id*)malloc(sizeof(cl_platform_id) * n);
 	clGetPlatformIDs(n, platforms, NULL);
-
-	char buffer[1024];
-	cl_platform_id platform;
-	for (int i = 0; i < n; ++i) {
-		clGetPlatformInfo(platforms[i], CL_PLATFORM_NAME, 1024, buffer, NULL);
-		if (strstr(buffer, "AMD") != NULL) {
-			platform = platforms[i];
-			break;
-		}
-	}
-
+	auto platform = platforms[0];
 	free(platforms);
-
 	return platform;
 }
 
 int main() {
-	auto platform = getAMDPlatform();
+	auto platform = getPlatform();
 	cl_device_id device;
 	clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, NULL);
 
 	cl_device_fp_config flag;
 	clGetDeviceInfo(device, CL_DEVICE_SINGLE_FP_CONFIG,
-					sizeof(flag), &flag, NULL);
+		sizeof(flag), &flag, NULL);
 
 	printf("Float processing features:\n");
 	if (flag & CL_FP_INF_NAN)

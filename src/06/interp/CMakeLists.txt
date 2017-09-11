@@ -1,6 +1,4 @@
 add_executable(interp interp.cpp)
-target_link_libraries(interp opencl libpng zlib)
-
 set_target_properties(interp PROPERTIES FOLDER "06")
 add_custom_command(
     TARGET interp POST_BUILD

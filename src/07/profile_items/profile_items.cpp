@@ -1,5 +1,4 @@
 #define _CRT_SECURE_NO_WARNINGS
-#define PROFILE_READ
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,46 +61,33 @@ int main() {
 	auto context = clCreateContext(NULL, 1, &device, NULL, NULL, NULL);
 	auto queue = clCreateCommandQueue(
 		context, device, CL_QUEUE_PROFILING_ENABLE, NULL);
-	auto program = buildProgram(context, device, "profile_read.cl");
-	auto kernel = clCreateKernel(program, "profile_read", NULL);
+	auto program = buildProgram(context, device, "profile_items.cl");
+	auto kernel = clCreateKernel(program, "profile_items", NULL);
 
-	const int NUM_BYTES = 131072;
-	const int NUM_ITER = 2000;
-	char data[NUM_BYTES];
-	auto buffer = clCreateBuffer(
-		context, CL_MEM_WRITE_ONLY, sizeof(data), NULL, NULL);
+	const int NUM_INTS = 4096;
+	const int NUM_ITERS = 2000;
+	const size_t NUM_ITEMS = 512;
+
+	int data[NUM_INTS];
+	auto buffer = clCreateBuffer(context,
+		CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(data), data, NULL);
 	clSetKernelArg(kernel, 0, sizeof(buffer), &buffer);
-	int n = NUM_BYTES / 16;
-	clSetKernelArg(kernel, 1, sizeof(n), &n);
+	clSetKernelArg(kernel, 1, sizeof(int), &NUM_INTS);
 
+	cl_ulong time_start, time_end;
+	cl_ulong time_total = 0;
 	cl_event profile_event;
-	cl_ulong start_time, end_time;
-	cl_ulong total_time = 0;
-	for (int i = 0; i < NUM_ITER; ++i) {
-		clEnqueueTask(queue, kernel, 0, NULL, NULL);
-#ifdef PROFILE_READ
-		clEnqueueReadBuffer(queue, buffer, CL_TRUE,
-			0, sizeof(data), data, 0, NULL, &profile_event);
-#else
-		auto mapped_memory = clEnqueueMapBuffer(queue, buffer, CL_TRUE,
-			CL_MAP_READ, 0, sizeof(data), 0, NULL, &profile_event, NULL);
-		memcpy(data, mapped_memory, sizeof(data));
-#endif
-		clGetEventProfilingInfo(profile_event, CL_PROFILING_COMMAND_START,
-			sizeof(start_time), &start_time, NULL);
-		clGetEventProfilingInfo(profile_event, CL_PROFILING_COMMAND_END,
-			sizeof(end_time), &end_time, NULL);
-		total_time += end_time - start_time;
-#ifndef PROFILE_READ
-		clEnqueueUnmapMemObject(queue, buffer, mapped_memory, 0, NULL, NULL);
-#endif
+	for (int i = 0; i < NUM_ITERS; ++i) {
+		clEnqueueNDRangeKernel(queue, kernel,
+			1, NULL, &NUM_ITEMS, NULL, 0, NULL, &profile_event);
+		clFinish(queue);
+		clGetEventProfilingInfo(profile_event,
+			CL_PROFILING_COMMAND_START, sizeof(time_start), &time_start, NULL);
+		clGetEventProfilingInfo(profile_event,
+			CL_PROFILING_COMMAND_END, sizeof(time_end), &time_end, NULL);
+		time_total += time_end - time_start;
 	}
-
-#ifdef PROFILE_READ
-	printf("Average read time: %lu\n", total_time / NUM_ITER);
-#else
-	printf("Average map time: %lu\n", total_time / NUM_ITER);
-#endif
+	printf("Average time = %lu\n", time_total / NUM_ITERS);
 
 	clReleaseMemObject(buffer);
 	clReleaseEvent(profile_event);
